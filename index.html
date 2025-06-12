@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alice Is Missing</title>
+</head>
+<body>
+    <div class="background"></div>
+    <div class="timer-container">
+        <h1 id="timer">90:00</h1>
+    </div>
+    <audio id="milestoneSound" src="assets/piano-ringtone-304114.mp3"></audio>
+    <div id="timerModal" style="display:none;">
+        <div class="modal-overlay"></div>
+        <div class="modal-content">
+            <h2>Set Timer</h2>
+            <form id="timerForm">
+                <label for="timerInput">Minutes:</label>
+                <input type="number" id="timerInput" min="0" max="999" value="90" />
+                <button type="submit">Set</button>
+            </form>
+            <button id="resetTimerBtn">Reset to 90:00</button>
+            <button id="closeModalBtn">Close</button>
+        </div>
+    </div>
+    <script src="src/script.js" type="module"></script>
+</body>
+</html>

@@ -1,0 +1,15 @@
+{
+  "name": "aliceismissing",
+  "version": "1.0.0",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "clean": "rm -rf dist/*",
+    "start": "http-server dist"
+  },
+  "author": "Tony Boyles <aaboyles@gmail.com>",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  }
+}
