@@ -120,25 +120,15 @@ body.modal-open {
                 <label for="timerInput">Minutes:</label>
                 <input type="number" id="timerInput" min="0" max="999" value="90" />
                 <button type="submit">Set</button>
+                <div style="margin: 1em 0;">
+                    <input type="checkbox" id="soundEnabled" checked />
+                    <label for="soundEnabled">Play milestone sounds</label>
+                </div>
             </form>
             <button id="resetTimerBtn">Reset to 90:00</button>
             <button id="closeModalBtn">Close</button>
         </div>
     </div>
-    <script>
-    // Register Service Worker
-    if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-            navigator.serviceWorker.register('/sw.js')
-                .then(registration => {
-                    console.log('ServiceWorker registration successful');
-                })
-                .catch(err => {
-                    console.log('ServiceWorker registration failed: ', err);
-                });
-        });
-    }
-    </script>
     <script>const timerDisplay = document.getElementById('timer');
 const milestoneSound = document.getElementById('milestoneSound');
 
@@ -166,6 +156,15 @@ function getTimerCookie() {
     return match ? parseInt(match[1], 10) : null;
 }
 
+function setSoundEnabledCookie(enabled) {
+    document.cookie = `alice_sound=${enabled ? '1' : '0'}; path=/; max-age=604800`;
+}
+
+function getSoundEnabledCookie() {
+    const match = document.cookie.match(/(?:^|; )alice_sound=([01])/);
+    return match ? match[1] === '1' : true; // Default to true if no cookie
+}
+
 function setBackgroundBlur(blur) {
     const bg = document.querySelector('.background');
     if (blur) {
@@ -190,7 +189,7 @@ function startTimer() {
             currentSeconds--;
             updateTimerDisplay();
             setTimerCookie(currentSeconds);
-            if (milestoneSeconds.includes(currentSeconds)) {
+            if (milestoneSeconds.includes(currentSeconds) && getSoundEnabledCookie()) {
                 milestoneSound.play();
             }
         } else {
@@ -270,6 +269,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('timerForm');
     const input = document.getElementById('timerInput');
     const resetBtn = document.getElementById('resetTimerBtn');
+    const soundCheckbox = document.getElementById('soundEnabled');
+
+    // Initialize sound checkbox from cookie
+    soundCheckbox.checked = getSoundEnabledCookie();
+
+    // Save sound preference when changed
+    soundCheckbox.addEventListener('change', () => {
+        setSoundEnabledCookie(soundCheckbox.checked);
+    });
 
     overlay.onclick = hideTimerModal;
     closeBtn.onclick = hideTimerModal;
@@ -291,5 +299,19 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 });
 </script>
+    <script>
+    // Register Service Worker
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('/sw.js')
+                .then(registration => {
+                    console.log('ServiceWorker registration successful');
+                })
+                .catch(err => {
+                    console.log('ServiceWorker registration failed: ', err);
+                });
+        });
+    }
+    </script>
 </body>
 </html>

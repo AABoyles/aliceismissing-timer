@@ -25,6 +25,15 @@ function getTimerCookie() {
     return match ? parseInt(match[1], 10) : null;
 }
 
+function setSoundEnabledCookie(enabled) {
+    document.cookie = `alice_sound=${enabled ? '1' : '0'}; path=/; max-age=604800`;
+}
+
+function getSoundEnabledCookie() {
+    const match = document.cookie.match(/(?:^|; )alice_sound=([01])/);
+    return match ? match[1] === '1' : true; // Default to true if no cookie
+}
+
 function setBackgroundBlur(blur) {
     const bg = document.querySelector('.background');
     if (blur) {
@@ -49,7 +58,7 @@ function startTimer() {
             currentSeconds--;
             updateTimerDisplay();
             setTimerCookie(currentSeconds);
-            if (milestoneSeconds.includes(currentSeconds)) {
+            if (milestoneSeconds.includes(currentSeconds) && getSoundEnabledCookie()) {
                 milestoneSound.play();
             }
         } else {
@@ -129,6 +138,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('timerForm');
     const input = document.getElementById('timerInput');
     const resetBtn = document.getElementById('resetTimerBtn');
+    const soundCheckbox = document.getElementById('soundEnabled');
+
+    // Initialize sound checkbox from cookie
+    soundCheckbox.checked = getSoundEnabledCookie();
+
+    // Save sound preference when changed
+    soundCheckbox.addEventListener('change', () => {
+        setSoundEnabledCookie(soundCheckbox.checked);
+    });
 
     overlay.onclick = hideTimerModal;
     closeBtn.onclick = hideTimerModal;
