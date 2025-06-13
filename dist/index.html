@@ -125,6 +125,20 @@ body.modal-open {
             <button id="closeModalBtn">Close</button>
         </div>
     </div>
+    <script>
+    // Register Service Worker
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('/sw.js')
+                .then(registration => {
+                    console.log('ServiceWorker registration successful');
+                })
+                .catch(err => {
+                    console.log('ServiceWorker registration failed: ', err);
+                });
+        });
+    }
+    </script>
     <script>const timerDisplay = document.getElementById('timer');
 const milestoneSound = document.getElementById('milestoneSound');
 
